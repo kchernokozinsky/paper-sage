@@ -1,0 +1,15 @@
+{
+  "task_description": "Implement a function that calculates the factorial of a given number. The function should handle edge cases like negative numbers and zero appropriately.",
+  "evaluation_criteria": [
+    "Correctness: The function should correctly calculate factorial for valid inputs",
+    "Style: Code should be well-formatted, readable, and follow language conventions",
+    "Edge Cases: Should handle negative numbers, zero, and large numbers appropriately",
+    "Documentation: Code should include appropriate comments and documentation"
+  ],
+  "teacher_comment": "Focus on both correctness and code quality. Pay attention to how students handle edge cases.",
+  "grading_strategy": {
+    "correctness_weight": 0.5,
+    "style_weight": 0.3,
+    "edge_cases_weight": 0.2
+  }
+} 
