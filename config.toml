@@ -1,0 +1,33 @@
+[ai]
+timeout_secs = 10
+model_name = "qwen2.5:0.5b"
+temperature = 0.3
+max_tokens = 1000
+
+[prompt]
+template = """
+Please grade the following student submission according to the task description and evaluation criteria.
+
+Task Description:
+{task_description}
+
+Evaluation Criteria:
+{criteria}
+
+Student Submission (File: {filename}):
+```
+{content}
+```
+
+Please provide your evaluation in the following JSON format:
+{{
+    \"filename\": \"{filename}\",
+    \"correctness\": <score 0-100>,
+    \"style\": <score 0-100>,
+    \"edge_cases\": <score 0-100>,
+    \"total\": <weighted average score 0-100>,
+    \"comment\": \"<detailed feedback>\"
+}}
+
+Note: The total score will be calculated automatically using the grading weights.
+""" 

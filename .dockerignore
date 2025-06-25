@@ -1,0 +1,12 @@
+target/
+.git/
+.gitignore
+README.md
+*.md
+results/
+*.csv
+*.json
+*.xlsx
+Dockerfile
+docker-compose.yml
+.dockerignore 

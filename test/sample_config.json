@@ -1,0 +1,16 @@
+{
+  "task_description": "Implement a function that demonstrates good programming practices. The function should be well-documented, handle edge cases appropriately, and follow coding standards.",
+  "evaluation_criteria": [
+    "Code Quality: Code is well-structured, readable, and follows best practices",
+    "Functionality: Code correctly implements the required functionality",
+    "Documentation: Code is properly documented with comments and docstrings",
+    "Testing: Code includes appropriate test cases",
+    "Edge Cases: Code handles boundary conditions and error cases properly"
+  ],
+  "teacher_comment": "Please evaluate the code based on the criteria above. Focus on both correctness and code quality. Provide constructive feedback that will help the student improve.",
+  "grading_strategy": {
+    "correctness_weight": 0.5,
+    "style_weight": 0.3,
+    "edge_cases_weight": 0.2
+  }
+} 

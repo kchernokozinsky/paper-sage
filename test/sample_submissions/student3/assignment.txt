@@ -1,0 +1,59 @@
+Programming Assignment: Data Structure Implementation
+
+Question 1: Implement a Queue
+A queue is a linear data structure that follows the First In First Out (FIFO) principle.
+The first element added to the queue will be the first one to be removed.
+
+Required Operations:
+- enqueue(x): Add element x to the back of the queue
+- dequeue(): Remove and return the front element from the queue
+- peek(): Return the front element without removing it
+- isEmpty(): Check if the queue is empty
+- size(): Return the number of elements in the queue
+
+Implementation in Python:
+
+class Queue:
+    def __init__(self):
+        self.items = []
+    
+    def enqueue(self, item):
+        self.items.append(item)
+    
+    def dequeue(self):
+        if not self.isEmpty():
+            return self.items.pop(0)
+        else:
+            raise IndexError("Queue is empty")
+    
+    def peek(self):
+        if not self.isEmpty():
+            return self.items[0]
+        else:
+            raise IndexError("Queue is empty")
+    
+    def isEmpty(self):
+        return len(self.items) == 0
+    
+    def size(self):
+        return len(self.items)
+
+Example Usage:
+q = Queue()
+q.enqueue(1)
+q.enqueue(2)
+q.enqueue(3)
+print(q.dequeue())  # Output: 1
+print(q.peek())     # Output: 2
+print(q.size())     # Output: 2
+
+Question 2: Analysis
+1. What is the time complexity of enqueue and dequeue operations?
+2. How would you implement a queue using two stacks?
+3. What are the advantages and disadvantages of using a linked list vs array for queue implementation?
+
+Answer:
+1. Enqueue: O(1), Dequeue: O(n) for array implementation
+2. Use one stack for enqueue, another for dequeue operations
+3. Linked list: O(1) for both operations but more memory overhead
+   Array: O(1) enqueue, O(n) dequeue but less memory overhead 
