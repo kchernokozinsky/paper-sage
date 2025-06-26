@@ -16,6 +16,7 @@ pub use grader::Grader;
 pub use models::Config;
 pub use models::{FileContent, GradingRequest, GradingResponse, GradingResult, StudentSubmission};
 
+#[allow(dead_code)]
 /// Main application struct that orchestrates the grading process
 pub struct PaperSage {
     config: Config,
