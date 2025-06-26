@@ -55,7 +55,7 @@ Paper Sage is a Rust-based command-line application that automatically grades st
 
 4. **Run grading:**
    ```bash
-   # With OpenAI (requires API key)
+   # With OpenAI (requires API key and access to gpt-3.5-turbo)
    export OPENAI_API_KEY="your-api-key"
    ./target/release/paper-sage --input submissions --config config.json --model-endpoint https://api.openai.com/v1/chat/completions
 
@@ -65,6 +65,11 @@ Paper Sage is a Rust-based command-line application that automatically grades st
    # Test with sample data
    ./target/release/paper-sage --input test/sample_submissions --config test/sample_config.json --model-endpoint http://localhost:11434
    ```
+
+> **Note:**
+> - The default OpenAI model is `gpt-3.5-turbo`. Make sure your API key has access and sufficient quota.
+> - If you hit a rate limit, Paper Sage will automatically retry up to 3 times with a 20s delay.
+> - If all retries fail or the API is unavailable, the app will use mock grading for that submission.
 
 ### Docker Setup (Ollama only)
 
@@ -122,9 +127,16 @@ Paper Sage supports a wide range of file formats organized by category:
 
 ### AI Model Integration
 
-- **OpenAI**: GPT-4, GPT-3.5-turbo
+- **OpenAI**: Uses `gpt-3.5-turbo` by default (make sure your API key has access and sufficient quota)
 - **Ollama**: Local models (llama2, qwen2.5, etc.)
-- **Fallback**: Mock responses when AI is unavailable
+- **Fallback**: Mock responses when AI is unavailable or all retries fail
+
+#### Rate Limit Handling
+- If the OpenAI API returns a rate limit error, Paper Sage will automatically wait 20 seconds and retry (up to 3 times).
+- If all retries fail, the error will be reported and the submission will not be graded.
+
+#### Quota Handling
+- If you exceed your OpenAI quota, grading will fail until you add credits or upgrade your plan.
 
 ## Output
 
@@ -192,18 +204,20 @@ cargo test
 
 ## Troubleshooting
 
+### OpenAI API Issues
+- **Model not found**: Make sure your API key has access to `gpt-3.5-turbo` (or the model you specify in the code).
+- **Quota exceeded**: Add credits or upgrade your OpenAI plan at https://platform.openai.com/account/billing
+- **Rate limit exceeded**: The app will retry automatically, but you may need to wait or upgrade your plan for higher throughput.
+- **Fallback mode**: If the API is unavailable or all retries fail, the system uses mock responses for demonstration.
+
 ### Ollama Issues
 - **Slow responses**: Models may be too large for available memory
-- **Timeouts**: Increase timeout in `src/grader/ai_client.rs`
+- **Timeouts**: Increase timeout in `src/grader/ai_client.rs` or your config
 - **Memory issues**: Increase Docker memory limits in `docker-compose.yml`
 
 ### File Processing Issues
 - **Unsupported formats**: Check `src/file_processor/supported_formats.rs`
 - **Permission errors**: Ensure read access to submission files
-
-### AI Model Issues
-- **API errors**: Check API keys and endpoint URLs
-- **Fallback mode**: System automatically uses mock responses when AI is unavailable
 
 ## Contributing
 

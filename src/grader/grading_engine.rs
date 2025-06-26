@@ -1,5 +1,5 @@
 use crate::grader::AIClient;
-use crate::models::{Config, StudentSubmission, GradingRequest, GradingResult};
+use crate::models::{Config, GradingRequest, GradingResult, StudentSubmission};
 use anyhow::Result;
 
 /// Engine that handles the grading logic

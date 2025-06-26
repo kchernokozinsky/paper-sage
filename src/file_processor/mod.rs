@@ -44,13 +44,10 @@ impl FileProcessor {
                     match self.read_file(path, &root) {
                         Ok(content) => {
                             info!("Successfully read file: {}", path.display());
-                            
+
                             // Extract student name from the path
                             let student_name = self.extract_student_name(path, &root);
-                            student_files
-                                .entry(student_name)
-                                .or_insert_with(Vec::new)
-                                .push(content);
+                            student_files.entry(student_name).or_default().push(content);
                         }
                         Err(e) => {
                             warn!("Failed to read file {}: {}", path.display(), e);
@@ -65,8 +62,11 @@ impl FileProcessor {
         for (student_name, files) in student_files {
             if !files.is_empty() {
                 let submission = StudentSubmission::new(student_name, files);
-                info!("Created submission for student '{}' with {} files", 
-                      submission.student_name, submission.files.len());
+                info!(
+                    "Created submission for student '{}' with {} files",
+                    submission.student_name,
+                    submission.files.len()
+                );
                 submissions.push(submission);
             }
         }
@@ -83,7 +83,7 @@ impl FileProcessor {
                 return first_component.as_os_str().to_string_lossy().to_string();
             }
         }
-        
+
         // Fallback: use the root directory name
         root.file_name()
             .and_then(|name| name.to_str())
@@ -102,10 +102,10 @@ impl FileProcessor {
 
         let content = match extension.as_str() {
             // Text-based files (programming languages, configs, docs)
-            "rs" | "py" | "java" | "cpp" | "c" | "cs" | "js" | "ts" | "php" | "rb" | "go" | "swift" | "kt" |
-            "html" | "css" | "jsx" | "tsx" | "vue" | "svelte" |
-            "txt" | "md" | "json" | "xml" | "yaml" | "yml" | "toml" | "ini" | "cfg" | "conf" |
-            "csv" | "sql" | "sh" | "bat" | "ps1" => text_processor::read_text_file(path)?,
+            "rs" | "py" | "java" | "cpp" | "c" | "cs" | "js" | "ts" | "php" | "rb" | "go"
+            | "swift" | "kt" | "html" | "css" | "jsx" | "tsx" | "vue" | "svelte" | "txt" | "md"
+            | "json" | "xml" | "yaml" | "yml" | "toml" | "ini" | "cfg" | "conf" | "csv" | "sql"
+            | "sh" | "bat" | "ps1" => text_processor::read_text_file(path)?,
             // Binary/document files
             "pdf" => pdf_processor::read_pdf_file(path)?,
             "docx" | "doc" | "rtf" => docx_processor::read_docx_file(path)?,

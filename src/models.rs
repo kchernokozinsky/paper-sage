@@ -54,7 +54,7 @@ impl StudentSubmission {
     /// Merge all files into a single content string with folder hierarchy preserved
     fn merge_files(files: &[FileContent]) -> String {
         let mut merged = String::new();
-        
+
         for file in files {
             merged.push_str(&format!("=== FILE: {} ===\n", file.filename));
             merged.push_str(&format!("Type: {}\n", file.file_type));
@@ -62,7 +62,7 @@ impl StudentSubmission {
             merged.push_str(&file.content);
             merged.push_str("\n\n");
         }
-        
+
         merged
     }
 

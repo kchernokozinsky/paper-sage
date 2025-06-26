@@ -43,7 +43,10 @@ impl Grader {
         let submissions = file_processor.process_directory(input_dir)?;
         let mut results = Vec::new();
 
-        info!("Starting to grade {} student submissions", submissions.len());
+        info!(
+            "Starting to grade {} student submissions",
+            submissions.len()
+        );
 
         for (i, submission) in submissions.iter().enumerate() {
             info!(
@@ -54,7 +57,11 @@ impl Grader {
                 submission.files.len()
             );
 
-            match self.grading_engine.grade_submission(&self.ai_client, submission).await {
+            match self
+                .grading_engine
+                .grade_submission(&self.ai_client, submission)
+                .await
+            {
                 Ok(result) => {
                     info!(
                         "Successfully graded: {} (Score: {:.2})",
@@ -104,7 +111,11 @@ impl Grader {
                 info!("Using existing result for: {}", submission.student_name);
             } else {
                 info!("Grading submission: {}", submission.student_name);
-                match self.grading_engine.grade_submission(&self.ai_client, &submission).await {
+                match self
+                    .grading_engine
+                    .grade_submission(&self.ai_client, &submission)
+                    .await
+                {
                     Ok(result) => {
                         info!(
                             "Successfully graded: {} (Score: {:.2})",

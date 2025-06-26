@@ -14,8 +14,7 @@ impl SupportedFormats {
             // Configuration and documentation
             "txt", "md", "json", "xml", "yaml", "yml", "toml", "ini", "cfg", "conf",
             // Documentation
-            "pdf", "docx", "doc", "rtf",
-            // Data files
+            "pdf", "docx", "doc", "rtf", // Data files
             "csv", "sql", "sh", "bat", "ps1",
         ]
         .iter()
@@ -29,22 +28,32 @@ impl SupportedFormats {
     pub fn get_all_supported() -> Vec<&'static str> {
         vec![
             "rs", "py", "java", "cpp", "c", "cs", "js", "ts", "php", "rb", "go", "swift", "kt",
-            "html", "css", "jsx", "tsx", "vue", "svelte",
-            "txt", "md", "json", "xml", "yaml", "yml", "toml", "ini", "cfg", "conf",
-            "pdf", "docx", "doc", "rtf",
-            "csv", "sql", "sh", "bat", "ps1",
+            "html", "css", "jsx", "tsx", "vue", "svelte", "txt", "md", "json", "xml", "yaml",
+            "yml", "toml", "ini", "cfg", "conf", "pdf", "docx", "doc", "rtf", "csv", "sql", "sh",
+            "bat", "ps1",
         ]
     }
 
     /// Get supported extensions by category
     pub fn extensions_by_category() -> std::collections::HashMap<&'static str, Vec<&'static str>> {
         let mut categories = std::collections::HashMap::new();
-        categories.insert("source_code", vec!["rs", "py", "java", "cpp", "c", "cs", "js", "ts", "php", "rb", "go", "swift", "kt"]);
+        categories.insert(
+            "source_code",
+            vec![
+                "rs", "py", "java", "cpp", "c", "cs", "js", "ts", "php", "rb", "go", "swift", "kt",
+            ],
+        );
         categories.insert("text", vec!["txt", "md"]);
         categories.insert("documents", vec!["pdf", "docx", "doc", "rtf"]);
         categories.insert("data_files", vec!["csv", "sql", "sh", "bat", "ps1"]);
-        categories.insert("web_technologies", vec!["html", "css", "jsx", "tsx", "vue", "svelte"]);
-        categories.insert("configuration_and_documentation", vec!["json", "xml", "yaml", "yml", "toml", "ini", "cfg", "conf"]);
+        categories.insert(
+            "web_technologies",
+            vec!["html", "css", "jsx", "tsx", "vue", "svelte"],
+        );
+        categories.insert(
+            "configuration_and_documentation",
+            vec!["json", "xml", "yaml", "yml", "toml", "ini", "cfg", "conf"],
+        );
         categories
     }
 }

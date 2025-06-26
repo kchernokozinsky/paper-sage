@@ -6,7 +6,6 @@ use std::fs;
 #[derive(Debug, Deserialize, Clone)]
 pub struct AiConfig {
     pub timeout_secs: Option<u64>,
-    pub model_name: Option<String>,
     pub temperature: Option<f32>,
     pub max_tokens: Option<u32>,
 }
