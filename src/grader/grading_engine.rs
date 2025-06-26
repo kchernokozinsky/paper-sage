@@ -1,5 +1,5 @@
 use crate::grader::AIClient;
-use crate::models::{Config, FileContent, GradingRequest, GradingResult};
+use crate::models::{Config, StudentSubmission, GradingRequest, GradingResult};
 use anyhow::Result;
 
 /// Engine that handles the grading logic
@@ -14,14 +14,14 @@ impl GradingEngine {
         }
     }
 
-    pub async fn grade_file(
+    pub async fn grade_submission(
         &self,
         ai_client: &AIClient,
-        file: &FileContent,
+        submission: &StudentSubmission,
     ) -> Result<GradingResult> {
         let request = GradingRequest {
-            filename: file.filename.clone(),
-            content: file.content.clone(),
+            filename: submission.get_main_filename(),
+            content: submission.merged_content.clone(),
             task_description: self.config.task_description.clone(),
             evaluation_criteria: self.config.evaluation_criteria.clone(),
             teacher_comment: self.config.teacher_comment.clone(),

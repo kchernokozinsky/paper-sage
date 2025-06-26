@@ -40,27 +40,33 @@ impl Grader {
         input_dir: &str,
         file_processor: &FileProcessor,
     ) -> Result<Vec<GradingResult>> {
-        let files = file_processor.process_directory(input_dir)?;
+        let submissions = file_processor.process_directory(input_dir)?;
         let mut results = Vec::new();
 
-        info!("Starting to grade {} files", files.len());
+        info!("Starting to grade {} student submissions", submissions.len());
 
-        for (i, file) in files.iter().enumerate() {
-            info!("Grading file {}/{}: {}", i + 1, files.len(), file.filename);
+        for (i, submission) in submissions.iter().enumerate() {
+            info!(
+                "Grading submission {}/{}: {} ({} files)",
+                i + 1,
+                submissions.len(),
+                submission.student_name,
+                submission.files.len()
+            );
 
-            match self.grading_engine.grade_file(&self.ai_client, file).await {
+            match self.grading_engine.grade_submission(&self.ai_client, submission).await {
                 Ok(result) => {
                     info!(
                         "Successfully graded: {} (Score: {:.2})",
-                        file.filename, result.total
+                        submission.student_name, result.total
                     );
                     results.push(result);
                 }
                 Err(e) => {
-                    error!("Failed to grade {}: {}", file.filename, e);
+                    error!("Failed to grade {}: {}", submission.student_name, e);
                     // Add a failed result
                     results.push(GradingResult {
-                        filename: file.filename.clone(),
+                        filename: submission.get_main_filename(),
                         correctness: 0.0,
                         style: 0.0,
                         edge_cases: 0.0,
@@ -83,32 +89,33 @@ impl Grader {
         let existing_results: Vec<GradingResult> =
             serde_json::from_str(&std::fs::read_to_string(resume_path)?)?;
 
-        let mut completed_files: HashMap<String, GradingResult> = existing_results
+        let mut completed_submissions: HashMap<String, GradingResult> = existing_results
             .into_iter()
             .map(|r| (r.filename.clone(), r))
             .collect();
 
-        let files = file_processor.process_directory(input_dir)?;
+        let submissions = file_processor.process_directory(input_dir)?;
         let mut results = Vec::new();
 
-        for file in files {
-            if let Some(existing) = completed_files.remove(&file.filename) {
+        for submission in submissions {
+            let submission_key = submission.get_main_filename();
+            if let Some(existing) = completed_submissions.remove(&submission_key) {
                 results.push(existing);
-                info!("Using existing result for: {}", file.filename);
+                info!("Using existing result for: {}", submission.student_name);
             } else {
-                info!("Grading file: {}", file.filename);
-                match self.grading_engine.grade_file(&self.ai_client, &file).await {
+                info!("Grading submission: {}", submission.student_name);
+                match self.grading_engine.grade_submission(&self.ai_client, &submission).await {
                     Ok(result) => {
                         info!(
                             "Successfully graded: {} (Score: {:.2})",
-                            file.filename, result.total
+                            submission.student_name, result.total
                         );
                         results.push(result);
                     }
                     Err(e) => {
-                        error!("Failed to grade {}: {}", file.filename, e);
+                        error!("Failed to grade {}: {}", submission.student_name, e);
                         results.push(GradingResult {
-                            filename: file.filename.clone(),
+                            filename: submission.get_main_filename(),
                             correctness: 0.0,
                             style: 0.0,
                             edge_cases: 0.0,

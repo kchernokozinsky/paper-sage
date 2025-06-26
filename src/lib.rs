@@ -14,7 +14,7 @@ pub use excel_generator::ExcelGenerator;
 pub use file_processor::FileProcessor;
 pub use grader::Grader;
 pub use models::Config;
-pub use models::{FileContent, GradingRequest, GradingResponse, GradingResult};
+pub use models::{FileContent, GradingRequest, GradingResponse, GradingResult, StudentSubmission};
 
 /// Main application struct that orchestrates the grading process
 pub struct PaperSage {
@@ -105,7 +105,7 @@ impl PaperSage {
     }
 
     /// Process files without grading (useful for testing)
-    pub fn process_files(&self, input_dir: &str) -> anyhow::Result<Vec<FileContent>> {
+    pub fn process_files(&self, input_dir: &str) -> anyhow::Result<Vec<StudentSubmission>> {
         self.file_processor.process_directory(input_dir)
     }
 }

@@ -32,6 +32,46 @@ pub struct FileContent {
     pub file_type: String,
 }
 
+/// Represents a complete student submission with multiple files
+#[derive(Debug, Serialize, Deserialize)]
+pub struct StudentSubmission {
+    pub student_name: String,
+    pub files: Vec<FileContent>,
+    pub merged_content: String,
+}
+
+impl StudentSubmission {
+    /// Create a new student submission from a list of files
+    pub fn new(student_name: String, files: Vec<FileContent>) -> Self {
+        let merged_content = Self::merge_files(&files);
+        Self {
+            student_name,
+            files,
+            merged_content,
+        }
+    }
+
+    /// Merge all files into a single content string with folder hierarchy preserved
+    fn merge_files(files: &[FileContent]) -> String {
+        let mut merged = String::new();
+        
+        for file in files {
+            merged.push_str(&format!("=== FILE: {} ===\n", file.filename));
+            merged.push_str(&format!("Type: {}\n", file.file_type));
+            merged.push_str("Content:\n");
+            merged.push_str(&file.content);
+            merged.push_str("\n\n");
+        }
+        
+        merged
+    }
+
+    /// Get the main filename for the submission (usually the student folder name)
+    pub fn get_main_filename(&self) -> String {
+        format!("{}/", self.student_name)
+    }
+}
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct GradingRequest {
     pub filename: String,

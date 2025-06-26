@@ -9,7 +9,7 @@ Paper Sage is a Rust-based command-line application that automatically grades st
 - **Flexible Configuration**: JSON-based grading criteria and task descriptions
 - **Comprehensive Reports**: Generates both JSON and CSV output files
 - **Error Handling**: Graceful fallback to mock responses when AI is unavailable
-- **Docker Support**: Complete containerized setup with Ollama for local AI
+- **Docker Support (Ollama only)**: Run Ollama in Docker for local AI; Paper Sage runs natively
 
 ## Quick Start
 
@@ -66,7 +66,7 @@ Paper Sage is a Rust-based command-line application that automatically grades st
    ./target/release/paper-sage --input test/sample_submissions --config test/sample_config.json --model-endpoint http://localhost:11434
    ```
 
-### Docker Setup (Ollama)
+### Docker Setup (Ollama only)
 
 1. **Start Ollama service:**
    ```bash
@@ -75,7 +75,7 @@ Paper Sage is a Rust-based command-line application that automatically grades st
 
 2. **Pull AI models:**
    ```bash
-   docker exec -it paper-sage-ollama ollama pull qwen2.5:0.5b
+   docker exec -it ollama ollama pull qwen2.5:0.5b
    ```
 
 3. **Run Paper Sage locally:**
@@ -87,16 +87,38 @@ Paper Sage is a Rust-based command-line application that automatically grades st
 
 ### Grading Strategy
 
-The system uses a weighted scoring formula:
+The system uses a configurable weighted scoring formula defined in your grading configuration:
 ```
-Total Score = correctness × 0.5 + style × 0.3 + edge_cases × 0.2
+Total Score = correctness × correctness_weight + style × style_weight + edge_cases × edge_cases_weight
+```
+
+The weights are set in your JSON config file and must sum to 1.0. For example:
+```json
+"grading_strategy": {
+  "correctness_weight": 0.5,
+  "style_weight": 0.3,
+  "edge_cases_weight": 0.2
+}
 ```
 
 ### Supported File Formats
 
-- **Code files**: `.rs`, `.py`, `.java`
-- **Text files**: `.txt`
-- **Documents**: `.pdf`, `.docx`
+Paper Sage supports a wide range of file formats organized by category:
+
+**Programming Languages:**
+- `.rs`, `.py`, `.java`, `.cpp`, `.c`, `.cs`, `.js`, `.ts`, `.php`, `.rb`, `.go`, `.swift`, `.kt`
+
+**Web Technologies:**
+- `.html`, `.css`, `.jsx`, `.tsx`, `.vue`, `.svelte`
+
+**Configuration & Documentation:**
+- `.txt`, `.md`, `.json`, `.xml`, `.yaml`, `.yml`, `.toml`, `.ini`, `.cfg`, `.conf`
+
+**Documents:**
+- `.pdf`, `.docx`, `.doc`, `.rtf`
+
+**Data & Scripts:**
+- `.csv`, `.sql`, `.sh`, `.bat`, `.ps1`
 
 ### AI Model Integration
 
@@ -141,8 +163,7 @@ paper-sage/
 ├── test/
 │   ├── sample_submissions/  # Sample student submissions
 │   └── sample_config.json   # Sample grading configuration
-├── docker-compose.yml       # Ollama setup
-└── Dockerfile              # Application container
+├── docker-compose.yml       # Ollama setup only
 ```
 
 ## Development

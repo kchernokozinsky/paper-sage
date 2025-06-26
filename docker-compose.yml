@@ -4,49 +4,16 @@ services:
   # Ollama service for local AI model
   ollama:
     image: ollama/ollama:latest
-    container_name: paper-sage-ollama
+    container_name: ollama
     ports:
       - "11434:11434"
     volumes:
       - ollama_data:/root/.ollama
-    environment:
-      - OLLAMA_HOST=0.0.0.0
-    restart: unless-stopped
-    deploy:
-      resources:
-        limits:
-          memory: 8G
-        reservations:
-          memory: 4G
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  # Paper Sage application
-  paper-sage:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: paper-sage-app
-    volumes:
-      - ./test/sample_submissions:/app/submissions:ro
-      - ./test/sample_config.json:/app/config.json:ro
-      - ./results:/app/results
-    environment:
-      - RUST_LOG=info
-    depends_on:
-      - ollama
-    command: >
-      sh -c "
-        echo 'Waiting for Ollama to be ready...' &&
-        sleep 10 &&
-        echo 'Pulling Llama2 model...' &&
-        curl -X POST http://ollama:11434/api/pull -d '{\"name\":\"llama2\"}' &&
-        echo 'Starting Paper Sage...' &&
-        paper-sage --input /app/submissions --config /app/config.json --model-endpoint http://ollama:11434
-      "
+      test: ["CMD", "curl", "-f", "http://localhost:11434"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   ollama_data:
